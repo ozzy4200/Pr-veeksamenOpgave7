@@ -1,12 +1,31 @@
-interface Person {
-    firstName: string;
-    lastName: string;
-}
+import axios, {
+    AxiosResponse,
+    AxiosError
+} from "../../node_modules/axios/index"
 
-function greeter(person: Person): string {
-    return "Hello, " + person.firstName + " " + person.lastName;
+interface Lastbil {
+    LastBilType: string;
+    AntalKm: number;
+    AntalLiter: number;
 }
-let user: Person = { firstName: "John", lastName: "Doe" };
+let baseUri: string = "https://localhost:44362/api/Item"
 
-let element: HTMLDivElement = <HTMLDivElement> document.getElementById("content");
-element.innerHTML = greeter(user);
+var app = new Vue({
+    el: "#app",
+    data: {
+        Lastbils: [], formData: {LastBilType:"",AntalKm:0, AntalLiter:0},
+
+    },
+    methods: {
+        getAllLastbils() {
+            axios.get<Lastbil[]>(baseUri)
+                .then((Response: AxiosResponse<Lastbil[]>) => {
+                    this.Lastbils = Response.data
+                    console.log(Response.data)
+                })
+                .catch((error: AxiosError) => {
+                    console.log(error.message)
+                })
+            },
+        }
+    })
